@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Restaurant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .restaurant-choice {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .restaurant-choice button {
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Times Image Processor</h1>
+    <p>Select the restaurant the images are affiliated with:</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="restaurant-choice">
+            <button type="submit" name="restaurant" value="berwick">Times Berwick</button>
+            <button type="submit" name="restaurant" value="cranbourne">Times Cranbourne</button>
+        </div>
+    </form>
+</body>
+</html>

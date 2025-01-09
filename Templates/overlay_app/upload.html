@@ -1,0 +1,81 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Images</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .form-row input {
+            margin-right: 10px;
+        }
+        .form-row button {
+            margin-left: 10px;
+        }
+        .logo-preview {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload Images for {{ restaurant_name }}</h1>
+    <div class="logo-preview">
+        <img src="{% static 'logos/times_berwick_logo.png' %}" alt="{{ restaurant_name }}" width="150">
+    </div>
+    <form method="post" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
+        <div id="form-rows">
+            <div class="form-row">
+                <input type="file" name="image" accept="image/*" required>
+                <input type="text" name="text" placeholder="Enter Caption" required>
+                <button type="button" class="remove-row">Remove</button>
+            </div>
+        </div>
+        <button type="button" id="add-row">Add More</button>
+        <button type="submit" name="bulk_download">Download All</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            const formRowHTML = `
+                <div class="form-row">
+                    <input type="file" name="image" accept="image/*" required>
+                    <input type="text" name="text" placeholder="Enter Caption" required>
+                    <button type="button" class="remove-row">Remove</button>
+                </div>`;
+
+            $('#add-row').click(function () {
+                $('#form-rows').append(formRowHTML);
+            });
+
+            $(document).on('click', '.remove-row', function () {
+                $(this).parent('.form-row').remove();
+            });
+        });
+    </script>
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if output_files %}
+    <h2>Download Processed Images</h2>
+    <ul>
+        {% for file_path in output_files %}
+        <li><a href="{{ file.fullpath }}" download>Download {{ file.base_name }}</a></li>
+        {% endfor %}
+    </ul>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="bulk_download">Download All</button>
+    </form>
+    {% endif %}
+
+</body>
+</html>
